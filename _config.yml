@@ -42,8 +42,8 @@ nav:
   - title: Blog
     url: /archive
 
-  - title: About
-    url: /about
+  - title: 仿真过程
+    url: /radar_sim
 
-  - title: 雷达系统设计
-    url: /radar_sys
+  - title: 数学推导
+    url: /radar_math
