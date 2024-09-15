@@ -1,6 +1,6 @@
 # Setup
-title: Dark Poole
-url: https://getpoole.com
+title: wugfh
+url: https://github.com/wugfh/wugfh.github.io
 paginate: 1
 baseurl: ""
 permalink: pretty
@@ -32,7 +32,7 @@ sass:
 
 # Specify the author for blog posts
 author:
-  name: Mark Otto
+  name: wugfh
   url: https://twitter.com/mdo
   email: markdotto@gmail.com
 
