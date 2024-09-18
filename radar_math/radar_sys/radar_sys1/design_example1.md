@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 雷达系统设计1
+title: 简单sar系统设计
 ---
 
 <head>
@@ -18,11 +18,11 @@ title: 雷达系统设计1
 
 ## 系统设计仿真实例
 设计要求如图所示  
-![alt text](../figure/8.png)  
+![alt text](\./figure/8.png)  
 
 
 根据轨道高度与脉冲宽度，可以得到斑马图为  
-![alt text](../figure/9.png)    
+![alt text](\./figure/9.png)    
 选择PRF为1541Hz，对应的下视角范围为 $[31.95^{\circ},38.80^{\circ}]$，测绘宽度为115 km。
 
 ### 方位向参数设计
@@ -68,13 +68,13 @@ $$h_{el} \geq 0.886 \frac{2 \lambda R_{max} tan(\eta_{max})}{cT}$$
 ### 性能评估
 如下图所示，均满足要求。
 #### AASR
-![alt text](../figure/11.png)   
+![alt text](./figure/11.png)   
 
 #### RASR
 
-![alt text](../figure/12.png)   
+![alt text](./figure/12.png)   
 
 #### NESZ
 
-![alt text](../figure/10.png)   
+![alt text](./figure/10.png)   
 
