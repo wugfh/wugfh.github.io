@@ -26,7 +26,7 @@ title: Stepped-Frequency Technology articles
 >
 >3. R. T. Lord and M. R. Inggs, "High resolution SAR processing using stepped-frequencies," IGARSS'97. 1997 IEEE International Geoscience and Remote Sensing Symposium Proceedings. Remote Sensing - A Scientific Vision for Sustainable Development, Singapore, 1997, pp. 490-492 vol.1, doi: 10.1109/IGARSS.1997.615924.
 >
-> LONG Teng, DING Zegang, XIAO Feng, et al. Spaceborne high-resolution stepped-frequency
+>4. LONG Teng, DING Zegang, XIAO Feng, et al. Spaceborne high-resolution stepped-frequency
  SAR imaging technology[J]. Journal of Radars, 2019, 8(6): 782–792. doi: 10.12000/JR19076
 
 ### 论文1
@@ -58,3 +58,4 @@ title: Stepped-Frequency Technology articles
 解决硬件设备带宽有限的问题。如果想在距离向获得更高的分辨率，那么就必须要有更大的带宽，如何获得更大的带宽？使用更快的硬件设备是最简单的（也没那么简单，只是从系统复杂度来说是的）。如果设备能力不够呢，那就用在不同时间发不同频带，在接收时又拼起来，合成更大的带宽。
 
 ### 论文4 
+看完这篇论文后，大致对子带拼接的性能分析有个概念，应该可以做步进频的仿真了。
