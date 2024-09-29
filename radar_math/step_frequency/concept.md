@@ -28,6 +28,9 @@ title: Stepped-Frequency Technology articles
 >
 >4. LONG Teng, DING Zegang, XIAO Feng, et al. Spaceborne high-resolution stepped-frequency
  SAR imaging technology[J]. Journal of Radars, 2019, 8(6): 782–792. doi: 10.12000/JR19076
+>
+>5. Dang Hongxing, "Stepped frequency chirp signal SAR imaging," 2007 1st Asian and Pacific Conference on Synthetic Aperture Radar, Huangshan, China, 2007, pp. 14-18, doi: 10.1109/APSAR.2007.4418544.
+
 
 ### 论文1
 这篇论文给出了step-frequency 超高精度雷达的实现，主要贡献在于子带间的误差校正算法，并完成了机载测试，效果很好。
@@ -58,4 +61,11 @@ title: Stepped-Frequency Technology articles
 解决硬件设备带宽有限的问题。如果想在距离向获得更高的分辨率，那么就必须要有更大的带宽，如何获得更大的带宽？使用更快的硬件设备是最简单的（也没那么简单，只是从系统复杂度来说是的）。如果设备能力不够呢，那就用在不同时间发不同频带，在接收时又拼起来，合成更大的带宽。
 
 ### 论文4 
-看完这篇论文后，大致对子带拼接的性能分析有个概念，应该可以做步进频的仿真了。
+这篇论文不是很深入
+
+### 论文5
+这个讲诉了子带合成的步骤，步进频率的步长可能小于子带带宽
+1. 首先进行各个子带的匹配滤波
+2. 将已经完成匹配滤波的子带转到频域，并进行频谱搬移。  
+3.  将所有子带加在一起。
+![alt text](/assets/step_frequency/article5_1.png)
