@@ -178,6 +178,9 @@ data_final = abs(data_final)/max(max(abs(data_final)));
   
 <center>有stolt插值</center>  
 
+![alt text](/assets/wk_sim/complete.png)  
+
+
 存在一些没有解决的问题。代码里将数据进行了补零。
 ```matlab
 [Na_tmp, Nr_tmp] = size(data_1);
