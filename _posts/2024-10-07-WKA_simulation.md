@@ -3,6 +3,18 @@ layout: post
 title: wk 算法实测数据成像
 ---
 
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
 [数据集 RADARSAT1](https://github.com/wugfh/sar/tree/main/data/RadarSAT%E6%95%B0%E6%8D%AE/RadarSAT%E6%95%B0%E6%8D%AE)  
 
 ## $\omega$ K 成像算法仿真
@@ -165,6 +177,9 @@ data_final = abs(data_final)/max(max(abs(data_final)));
 
   
 <center>有stolt插值</center>  
+
+![alt text](/assets/wk_sim/complete.png)  
+
 
 存在一些没有解决的问题。代码里将数据进行了补零。
 ```matlab
