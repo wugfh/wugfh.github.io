@@ -202,4 +202,5 @@ data = zeros(Na+Na, Nr+Nr);
 data = zeros(Na+Na/2, Nr+Nr/2);
 ```
 效果如图，出现了虚影。
-![alt text](/assets/wk_sim/range_small.png)
+![alt text](/assets/wk_sim/range_small.png)  
+
