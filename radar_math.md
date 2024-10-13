@@ -9,8 +9,8 @@ title: sar 公式推导
 
 1. [雷达方程](/radar_math/radar_sys/radar_sys1/radar_equation/index.html)
 2. [模糊分析](/radar_math/radar_sys/radar_sys1/ambiguous_analyse/index.html)
-3. [重构滤波器](/radar_math/radar_sys/radar_sys1/reconstruct_filter/index.html)
-
+3. [混叠信号重构滤波器](/radar_math/radar_sys/radar_sys1/reconstruct_filter/index.html)
+4. [方位向多孔径分析1](/radar_math/multi_channel/m_chan1/index.html)
 
 -----
 
