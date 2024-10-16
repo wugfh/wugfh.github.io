@@ -99,16 +99,21 @@ $$ |f+ k \cdot PRF| > \frac{N \cdot PRF}{2}$$
 
 $$U_{j,p}(f) = \sum_{k=-\infty}^{+\infty} U_j(f+k \cdot PRF) = \sum_{k=-\infty}^{+\infty} U_{j,k}$$
 
-考虑到对称性，我们只考虑 $k > 0$ 的情况。当 $k < \frac{N}{2}$ 时，此时 $ |f+ k \cdot PRF| $ 有可能大于 $\frac{N \cdot PRF}{2}$ ，但只有 $N-k + 1 \sim N$ 的子带受影响 （ $-\frac{PRF}{2}$ 开始的子带编号为 $1$）, 当 $k > \frac{N}{2}$ 时，所有子带均受到 $U_{j,k}(f)$ 的影响。合并可得到受影响的子带为从 $m_0=max\{ N-k+1,1\} \sim N$ 。 所以第 $j$ 孔径的带外混叠或者说残余混叠可表示为
+考虑到对称性，我们只考虑 $k > 0$ 的情况。  
+当 $k < \frac{N}{2}$ 时，此时 $|f+ k \cdot PRF|$ 有可能大于 $\frac{N \cdot PRF}{2}$ ，但只有 $N-k + 1 \sim N$ 的子带受影响 （ $-\frac{PRF}{2}$ 开始的子带编号为 $1$）, 当 $k > \frac{N}{2}$ 时，所有子带均受到 $U_{j,k}(f)$ 的影响。合并可得到受影响的子带为从 $m_0=max\{ N-k+1,1\} \sim N$ 。 所以第 $j$ 孔径的带外混叠或者说残余混叠可表示为
 
 $$e_{k,j} = \sum_{m=m_0}^{N} U_{j,k}(f) P_{jm}(f) = \sum_{m=m_0}^{N} U_{k}(f) H_{jk}(f) P_{jm}(f) = U_{k}(f)\sum_{m=m_0}^{N}  H_{jk}(f) P_{jm}(f)$$
 
 为了方便，这里 
 
-$$ H_{jk}(f) = H_j(f+k \cdot PRF)$$
+$$ H_{jk}(f) = H_j(f+k \cdot PRF)$$  
+
+  
 $$P_{jm}(f) = P_j(f + m \cdot PRF)$$
 
-直接令 $m_0 = 1$ 也可以，重构算法会将非子带（ $I_m$）内的带内（ $I_n，n \neq m，|n| < N/2$ ）信号置为 $0$。对所有孔径与所有 $k$ 求和，可以得到
+直接令 $m_0 = 1$ 也可以，重构算法会将非子带（$I_m$）内的带内
+（$I_n,n \neq m,|n| < N/2$） 
+信号置为 $0$。对所有孔径与所有 $k$ 求和，可以得到
 
 $$e_{\Sigma}(f) = 2 \sum_{k=1}^{\infty}U_k(f) \cdot \sum_{m=m_0}^{N}\sum_{j=1}^{N}H_{jk}(f) P_{jm}(f)$$
 
@@ -143,7 +148,13 @@ $$p_n(f) = E(|n(f)|^2) = E[|\sum_{j=1}^N P_j(f) \cdot (n_{j,p}(f) \cdot \sqrt{G_
 
 $$p_n = \sum_{j=1}^N E[|n_{j,p}(f) P_j(f)|^2]\cdot G_j F_j + E[|\sum_{j=1}^N P_j(f)n_{q,j}(f)|] = p_{n,rx} + p_{n,q}$$
 
-选择合适的系统参数使得量化噪声可以忽略，同时视各个孔径的 $G_j,F_j$ 一致，则我们可以发现，经过系统处理后，噪声放大了 $G \cdot F \cdot N \sum_{j=1}^N E[|P_j(f)|^2]$ 倍，而信号只放大了 $G$ 倍。所以SNR的变化为
+选择合适的系统参数使得量化噪声可以忽略，同时视各个孔径的 $G_j,F_j$ 一致，则我们可以发现，经过系统处理后，噪声放大了   
+
+
+$$G \cdot F \cdot N \sum_{j=1}^N E[|P_j(f)|^2]$$  
+
+
+而信号只放大了 $G$ 倍。所以SNR的变化为
 
 $$\frac{SNR_{el}}{SNR_{out}} = F \cdot N \sum_{j=1}^N E[|P_j(f)|^2]$$
 
@@ -163,9 +174,11 @@ $$SNR_0 = \frac{P_{tx} G_{tx}(\theta_{az}, \theta_i) G_{rx,j}(\theta_{az}, \thet
 
 经过脉冲压缩处理后，$SNR$ 扩大 $N_{rg} N_{az}$ 倍。$N_{rg}，N_{az}$ 分别为方位向和距离向的脉冲压缩比。目标照射时间为 $T_{az}$，距离向与方位向的分辨率为 $\delta_{rg}，\delta_{az}$ 。
 
-$$SNR_1 = N_{az}N_{rg}SNR_0$$
-$$N_{rg} = B\tau$$
-$$N_{az} = T_{az} PRF = \frac{R(\theta_i) \lambda}{d_{rx,az} \cdot v_s} PRF = \frac{R(\theta_i) \lambda}{2 \delta_{az} v_s}$$
+$$SNR_1 = N_{az}N_{rg}SNR_0$$  
+  
+$$N_{rg} = B\tau$$  
+  
+$$N_{az} = T_{az} PRF = \frac{R(\theta_i) \lambda}{d_{rx,az} \cdot v_s} PRF = \frac{R(\theta_i) \lambda}{2 \delta_{az} v_s}$$   
 
 设每个目标的后向散射系数都等于 $\sigma_0$ ，则
 
