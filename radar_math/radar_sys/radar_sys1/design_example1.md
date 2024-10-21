@@ -57,7 +57,7 @@ $$d_{el,tx} = \frac{0.886 \lambda}{\theta_{el}} = 0.2302 \enspace m$$
 
 对于接收端，接收波束的3dB宽度应该小于脉冲的地面瞬时覆盖范围，设接收天线的高度为 $h_{el}$
 
-$$\frac{0.886 \lambda}{h_{el}} \leq \frac{cT}{2tan\eta}$$
+$$R_{max}\frac{0.886 \lambda}{h_{el}} \leq \frac{cT}{2tan\eta}$$
 
 得出天线高度为
 
