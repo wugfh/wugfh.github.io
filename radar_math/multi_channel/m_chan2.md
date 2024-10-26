@@ -31,7 +31,7 @@ $$\Delta t_j = \frac{\Delta x_j^2}{2 v_s}$$
 $$H_j(f) = exp(-j \pi \frac{v_g}{v_s}\frac{\Delta x_j^2}{2 \lambda R_0}-j \pi \frac{\Delta x_j^2}{v_s} f)$$
 
 子通道输出信号为 $U_j(f)$，以 $PRF$ 采样率采样得到的信号为 $U_{j,p}(f)$ 。如果想要使用传统sar的聚焦算法，需要将多孔径系统的附加系统响应补偿掉，或者说从 $[U_{1,p}(f) \cdots U_{j,p}(f) \cdots U_{N,p}(f)]$ 中重建出 $U_p(f)$，$U_p(f)$ 为 $U(f)$ 以 $N \cdot PRF$ 采样率采样得到的信号。
-由采样定理可以得到，混叠信号 $U_{j,p}$ （不考虑 $N \cdot PRF$ 带外的信号）为
+由采样定理可以得到，混叠信号 $U_{j,p}$ （只考虑多普勒带宽内的信号）为
 
 $$U_{j,p}(f) = \sum_{n=0}^{N-1}{U_j(f+n \cdot PRF)}=\sum_{n=0}^{N-1}U(f+n \cdot PRF)H_{j}(f+n \cdot PRF)$$
 
@@ -43,8 +43,8 @@ $$\bf{U_{jp}} (f) = \begin{bmatrix}
 U_{1,p}(f) & \cdots & U_{N,p}(f)
 \end{bmatrix}$$
 
-$$\bf{U_p}(f) = \begin{bmatrix}
-U_p(f) & \cdots & U_p(f+(N-1) \cdot PRF)
+$$\bf{U}(f) = \begin{bmatrix}
+U(f) & \cdots & U(f+(N-1) \cdot PRF)
 \end{bmatrix}$$
 
 $$\bf{H}(f) = \begin{bmatrix}
@@ -56,7 +56,7 @@ H_1(f + (N-1) \cdot PRF) & \cdots & H_{N}(f + (N-1) \cdot PRF)\\
 
 显然，如果 $\bf{H}(f)$ 可逆，则
 
-$$\bf{U_p}(f) = \bf{U_{jp}}(f) \bf{H^{-1}}(f)$$
+$$\bf{U}(f) = \bf{U_{jp}}(f) \bf{H^{-1}}(f)$$
 
 令 $\bf{P}(f) = \bf{H^{-1}}(f)$，$\bf{P}(f)$ 有如下形式
 
@@ -67,12 +67,27 @@ P_2(f) & \cdots & P_{2}(f + (N-1) \cdot PRF)\\
 P_N(f) & \cdots & P_{N}(f + (N-1) \cdot PRF)\\
 \end{bmatrix} $$
 
+$\bf{P}(f)$ 的物理意义是什么，为什么有效果。由于采样率小于多普勒带宽，一个孔径的采样点完全不够。我们不得不综合所有孔径的采样点。那什么时候综合所有孔径的采样点有效果呢？答案是采样点对应的采样时间各不相同的时候。
+
+![alt text](/assets/multi_channel/m_chan1_3.png)  
+  
+回顾之前讨论系统结构的图，只要各个孔径的采样点排列在方位向信号的不同位置，即使它们没有均匀分布（如果 $PRF = PRF_{uni}$ , 各个孔径的采样点排列后是均匀分布的），我们也能重构出原来的信号。当然，不得不考虑有几个孔径的信号相互重叠，采样了相同时间点，这个时候 $\bf{H}(f)$ 矩阵不再是可逆矩阵，$\bf{P}(f)$ 也就不存在了。 
+
+
 下图为 $N = 2$ 时的示例
 
 ![alt text](/assets/multi_channel/m_chan2_2.png)  
 
-从上述讨论中，可以看出，该算法无法抑制 频率在 $N \cdot PRF$ 带宽外的信号，与传统sar相似的多普勒混叠依然存在。
 
+我们再考察一下系统的输出。系统的输出为
+
+$$U_p(f) = \sum_{j=1}^N U_{j,p}(f)P_j(f) \\
+= \sum_{j=1}^N \sum_{n=0}^{N-1}U(f+n \cdot PRF)H_{j}(f+n \cdot PRF) P_j(f) \\
+= \sum_{n=0}^{N-1}U(f+n \cdot PRF)  \sum_{j=1}^N H_{j}(f+n \cdot PRF) P_j(f)
+$$
+
+
+从上述讨论中，可以看出，该算法无法抑制 频率在 $N \cdot PRF$ 带宽外的信号，与传统sar相似的多普勒模糊依然存在。
 ## 算法实现
 从 $H_j(f)$ 的解析式中可以发现，$H_j(f)$ 与最短斜距相关，因此 $P_j(f)$ 也与最短斜距相关。所以对于二维sar回波信号来说，每个距离门的重构系数 $\bf{P}(f)$ 不同，我们可能需要逐个进行重建。
 
@@ -80,11 +95,7 @@ P_N(f) & \cdots & P_{N}(f + (N-1) \cdot PRF)\\
 
 $$\Delta \phi_j = -\frac{v_g}{v_s}\frac{\pi \Delta x_j^2}{2 \lambda R_0}$$
 
-等效为
-
-$$\Delta R_{0,j} = -\frac{v_g}{v_s}\frac{\Delta x_j^2}{4 R_0}$$
-
-在重构时，这个距离漂移会导致重构系数与斜距不对应（重构系数的计算使用的是 $R_0$，但由于距离徙动，此时信号对应的距离为 $R_0 + \Delta R_{0,j}$）。因此，先进行方位压缩，同时将这个漂移补偿掉，再进行重构比较好。
+应该注意到，$\Delta \phi_j$ 与 斜距有关。相应的，重构系数也与斜距有关。意味着，在重构时，距离徙动 $\Delta R_{j}$ 会导致重构系数与回波信号的斜距不对应（重构系数的计算使用的是 $R_0$，但由于距离徙动，此时信号对应的距离为 $R_0 + \Delta R_{j}$）。因此，先进行方位压缩与距离徙动校正，再进行重构比较好。
 
 ## 算法影响
 
