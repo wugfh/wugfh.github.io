@@ -43,7 +43,7 @@ $$R(t) \approx R_0 + \frac{v_g v_s}{2 R_0} t^2$$
 
 代入到接收信号中，可以化简得到
 
-$$h_i(t) \approx exp(-j \frac{4 \pi}{\lambda}R_0) \cdot exp(-j \frac{v_g}{v_s}\frac{\pi \Delta x_i^2}{2 \lambda R_0}) \cdot exp[-j \frac{2\pi v_g v_s}{\lambda}\frac{(t-\frac{\Delta x_i^2}{2 v_s})^2}{R_0}]$$
+$$h_i(t) \approx exp(-j \frac{4 \pi}{\lambda}R_0) \cdot exp(-j \frac{v_g}{v_s}\frac{\pi \Delta x_i^2}{2 \lambda R_0}) \cdot exp[-j \frac{2\pi v_g v_s}{\lambda}\frac{(t-\frac{\Delta x_i}{2 v_s})^2}{R_0}]$$
 
 可以看出，相较于单孔径的接收信号，多孔径中某一孔径的接收信号多出了一个相偏 
 
@@ -51,7 +51,7 @@ $$\Delta \phi_i = -\frac{v_g}{v_s}\frac{\pi \Delta x_i^2}{2 \lambda R_0}$$
 
 与一个时延 
 
-$$\Delta t_i = \frac{\Delta x_i^2}{2 v_s}$$  
+$$\Delta t_i = \frac{\Delta x_i}{2 v_s}$$  
 
 这些在频域上可简化为一个因子，也就是一个滤波器
 
