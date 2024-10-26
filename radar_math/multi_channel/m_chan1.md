@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 方位向多孔径雷达
+title: 方位向多孔径雷达的系统结构
 ---
 
 <head>
