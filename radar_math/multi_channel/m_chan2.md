@@ -111,7 +111,7 @@ $$ |f+ k \cdot PRF| > \frac{N \cdot PRF}{2}$$
 $$U_{j,p}(f) = \sum_{k=-\infty}^{+\infty} U_j(f+k \cdot PRF) = \sum_{k=-\infty}^{+\infty} U_{j,k}$$
 
 考虑到对称性，我们只考虑 $k > 0$ 的情况。  
-当 $k < \frac{N}{2}$ 时，此时 $|f+ k \cdot PRF|$ 有可能大于 $\frac{N \cdot PRF}{2}$ ，但只有 $N-k + 1 \sim N$ 的子带受影响 （ $-\frac{PRF}{2}$ 开始的子带编号为 $1$）, 当 $k > \frac{N}{2}$ 时，所有子带均受到 $U_{j,k}(f)$ 的影响。合并可得到受影响的子带为从 $m_0=max\{ N-k+1,1\} \sim N$ 。 所以第 $j$ 孔径的带外混叠或者说残余混叠可表示为
+当 $k < \frac{N}{2}$ 时，此时 $|f+ k \cdot PRF|$ 有可能大于 $\frac{N \cdot PRF}{2}$ ，但只有 $N-k + 1 \sim N$ 的子带受影响 （ $-\frac{PRF}{2}$ 开始的子带编号为 $1$）, 当 $k > \frac{N}{2}$ 时，所有子带均受到 $U_{j,k}(f)$ 的影响。合并可得到受影响的子带为从 $m_0=max(N-k+1,1) \sim N$ 。 所以第 $j$ 孔径的带外混叠或者说残余混叠可表示为
 
 $$e_{k,j} = \sum_{m=m_0}^{N} U_{j,k}(f) P_{jm}(f) = \sum_{m=m_0}^{N} U_{k}(f) H_{jk}(f) P_{jm}(f) = U_{k}(f)\sum_{m=m_0}^{N}  H_{jk}(f) P_{jm}(f)$$
 
