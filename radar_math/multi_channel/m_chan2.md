@@ -67,7 +67,7 @@ P_2(f) & \cdots & P_{2}(f + (N-1) \cdot PRF)\\
 P_N(f) & \cdots & P_{N}(f + (N-1) \cdot PRF)\\
 \end{bmatrix} $$
 
-$\bf{P}(f)$ 的物理意义是什么，为什么有效果。由于采样率小于多普勒带宽，一个孔径的采样点完全不够。我们不得不综合所有孔径的采样点。那什么时候综合所有孔径的采样点有效果呢？答案是采样点对应的采样时间各不相同的时候。
+将 $\bf{P}(f)$ 展平就可以得到带宽为 $PRF \cdot N$ 的滤波器了。
 
 ![alt text](/assets/multi_channel/m_chan1_3.png)  
   
@@ -111,7 +111,7 @@ $$ |f+ k \cdot PRF| > \frac{N \cdot PRF}{2}$$
 $$U_{j,p}(f) = \sum_{k=-\infty}^{+\infty} U_j(f+k \cdot PRF) = \sum_{k=-\infty}^{+\infty} U_{j,k}$$
 
 考虑到对称性，我们只考虑 $k > 0$ 的情况。  
-当 $k < \frac{N}{2}$ 时，此时 $|f+ k \cdot PRF|$ 有可能大于 $\frac{N \cdot PRF}{2}$ ，但只有 $N-k + 1 \sim N$ 的子带受影响 （ $-\frac{PRF}{2}$ 开始的子带编号为 $1$）, 当 $k > \frac{N}{2}$ 时，所有子带均受到 $U_{j,k}(f)$ 的影响。合并可得到受影响的子带为从 $m_0=max(N-k+1,1) \sim N$ 。 所以第 $j$ 孔径的带外混叠或者说残余混叠可表示为
+当 $k < \frac{N}{2}$ 时，子带编号为$N-k + 1 \sim N$ 的子带，$|f+ k \cdot PRF|$ 大于 $\frac{N \cdot PRF}{2}$ ， （ $-\frac{PRF}{2}$ 开始的子带编号为 $1$）, 当 $k > \frac{N}{2}$ 时，所有子带均受到 $U_{j,k}(f)$ 的影响。合并可得到受影响的子带为从 $m_0=max(N-k+1,1) \sim N$ 。 所以第 $j$ 孔径的带外混叠或者说残余混叠可表示为
 
 $$e_{k,j} = \sum_{m=m_0}^{N} U_{j,k}(f) P_{jm}(f) = \sum_{m=m_0}^{N} U_{k}(f) H_{jk}(f) P_{jm}(f) = U_{k}(f)\sum_{m=m_0}^{N}  H_{jk}(f) P_{jm}(f)$$
 
