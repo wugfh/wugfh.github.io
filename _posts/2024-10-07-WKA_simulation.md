@@ -57,7 +57,7 @@ R_eta_c = R0/cos(theta_rc);
 eta_c = 2*Vr*sin(theta_rc)/lambda;
 
 f_tau = fftshift((-Nr/2:Nr/2-1)*(Fs/Nr));
-f_eta = fc + fftshift((-Na/2:Na/2-1)*(Fa/Na));
+f_eta = fc + ((-Na/2:Na/2-1)*(Fa/Na));
 
 tau = 2*R_eta_c/c + (-Nr/2:Nr/2-1)*(1/Fs);
 eta = eta_c + (-Na/2:Na/2-1)*(1/Fa);
@@ -85,17 +85,9 @@ $$H_{rfm} = \frac{4 \pi R_{ref}}{c}\sqrt{(f_0+f_\tau)^2-\frac{c^2 f_\eta^2}{4 V_
 
 参考函数相乘实现很简单
 ```matlab
-data = data.*exp(-2j*pi*fc*Ext_time_eta_a);
-data_tau_feta = fft(data, Na, 1); % 首先变换到距离多普勒域
+data_ftau_feta = fft2(data); % 首先变换到距离多普勒域
 
-D = sqrt(1-c^2*Ext_f_eta.^2/(4*Vr^2*f0^2));%徙动因子
-D_ref = sqrt(1-c^2*fc.^2/(4*Vr^2*f0^2)); % 参考频率处的徙动因子（方位向频率中心）
-%大斜视角下，距离调频率随距离变化
-K_factor = c*R0*Ext_f_eta.^2./(2*Vr^2*f0^3.*D.^3);
-Km = Kr./(1-Kr*K_factor); 
-
-data_ftau_feta = fft(data_tau_feta, Nr, 2);
-H_rfm = exp(-4j*pi*(R0-R_ref)/c*sqrt((f0+Ext_f_tau).^2-c^2*Ext_f_eta.^2/(4*Vr^2)));
+H_rfm = exp(4j*pi*(R_ref)/c*sqrt((f0+Ext_f_tau).^2-c^2*Ext_f_eta.^2/(4*Vr^2)) + 1j*pi*Ext_f_tau.^2/Kr);
 data_ftau_feta = data_ftau_feta.*H_rfm; %一致rcmc
 ```
 
@@ -114,15 +106,11 @@ $$f_\tau^{\prime}+f_0 = \sqrt{(f_0+f_\tau)^2-\frac{c^2 f_\eta^2}{4 V_r^2}}$$
 其实现方式与rd算法的RCMC相似。
 
 ```matlab
-f_stolt = fftshift((-Nr/2:Nr/2-1))*(Fs/Nr); % 构造线性变化的stolt频率轴
+Ext_map_f_tau = sqrt((f0+Ext_f_tau).^2+c^2*Ext_f_eta.^2/(4*Vr^2))-f0; %线性变化的stolt频率轴与原始频率轴的对应（stolt 映射）
 
-[Ext_f_stolt, Ext_f_eta] = meshgrid(f_stolt, f_eta);
-Ext_map_f_tau = sqrt((f0+Ext_f_stolt).^2+c^2*Ext_f_eta.^2/(4*Vr^2))-f0; %线性变化的stolt频率轴与原始频率轴的对应（stolt 映射）
-
-Ext_map_f_pos = (Ext_map_f_tau)/(Fs/Nr); %频率转index
-Ext_map_f_pos = (Ext_map_f_pos<0)*Nr + Ext_map_f_pos;
-Ext_map_f_int = floor(Ext_map_f_pos);
-Ext_map_f_remain = Ext_map_f_pos-Ext_map_f_int;
+delta = (Ext_map_f_tau - Ext_f_tau)/(Fs/Nr);
+delta_int = floor(delta);
+delta_remain = delta-delta_int;
 
 %插值使用8位 sinc插值
 sinc_N = 8;
@@ -130,37 +118,31 @@ data_ftau_feta_stolt = zeros(Na,Nr);
 for i = 1:Na
     for j = 1:Nr
         predict_value = zeros(1, sinc_N);
-        map_f_int = Ext_map_f_int(i,j);
-        map_f_remain = Ext_map_f_remain(i,j);
-        sinc_x = map_f_remain - (-sinc_N/2:sinc_N/2-1);
+        dR_int = delta_int(i,j);
+        sinc_x = delta_remain(i,j) - (-sinc_N/2:sinc_N/2-1);
         sinc_y = sinc(sinc_x);
         for m = 1:sinc_N
-            if(map_f_int+m-sinc_N/2 > Nr)
+            index = dR_int+m+j-sinc_N/2;
+            if(index > Nr)
                 predict_value(m) = data_ftau_feta(i,Nr);
-            elseif(map_f_int+m-sinc_N/2 < 1)
+            elseif(index < 1)
                 predict_value(m) = data_ftau_feta(i,1);
             else
-                predict_value(m) = data_ftau_feta(i,map_f_int+m-sinc_N/2);
+                predict_value(m) = data_ftau_feta(i,index);
             end
         end
-        data_ftau_feta_stolt(i,j) = sum(predict_value.*sinc_y);
+        data_ftau_feta_stolt(i,j) = sum(predict_value.*sinc_y)/sum(sinc_y);
     end
 end
 ```
 
 ### 成像
 
-最后便是简单的成像。如果之前完成了距离压缩，这里便不需要了。如果没有，需要注意使用新的频率空间。
-
 ```matlab
-Hr = exp(1j*pi*(D./(Km.*D_ref)).*Ext_f_stolt.^2); 
-data_ftau_feta_stolt = data_ftau_feta_stolt.*Hr; % 距离压缩
 
-data_tau_feta = ifft(data_ftau_feta_stolt, Nr, 2);
-R0_RCMC = c*Ext_time_tau_r/2;
-Ha = exp(4j*pi*D.*R0_RCMC*f0/c); 
-data_tau_feta = data_tau_feta.*Ha; % 方位压缩
-data_final = ifft(data_tau_feta, Na, 1);
+data_ftau_feta_stolt = data_ftau_feta_stolt.*exp(-4j*pi*R_ref*Ext_f_tau/c);
+data_final = fftshift(ifft2(data_ftau_feta_stolt), 1);
+data_final = flip(data_final, 1);
 
 %简单的后期处理
 data_final = abs(data_final)/max(max(abs(data_final)));
@@ -181,26 +163,4 @@ data_final = abs(data_final)/max(max(abs(data_final)));
 ![alt text](/assets/wk_sim/complete.png)  
 
 
-存在一些没有解决的问题。代码里将数据进行了补零。
-```matlab
-[Na_tmp, Nr_tmp] = size(data_1);
-kai = kaiser(Nr_tmp, 2.5);
-Ext_kai = repmat(kai', Na_tmp, 1);
-data_1 = data_1.*Ext_kai;
-[Na, Nr] = size(data_1);
-data = zeros(Na+Na, Nr+Nr);
-data(1:Na, 1:Nr) = data_1;
-[Na,Nr] = size(data);
-```
-
-如果扩展后数据为这样，则效果很好。
-```matlab
-data = zeros(Na+Na, Nr+Nr);
-```
-但如果这样
-```matlab
-data = zeros(Na+Na/2, Nr+Nr/2);
-```
-效果如图，出现了方位模糊。
-![alt text](/assets/wk_sim/range_small.png)  
 
