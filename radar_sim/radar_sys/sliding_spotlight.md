@@ -43,14 +43,15 @@ for i in range(self.point_n):
 R_rot = vr*cp.cos(theta_c)**2/omega
 A = 1 - omega * R0 / (vr * cp.cos(theta_c)**2)
 ```
-而条带模式的合成孔径时间 $T_f$ 比 $T_a$ 短
+而条带模式的点目标合成孔径时间 $T_f$ 比 $T_a$ 短
 
 ```python
 Tf = Ta*A
 ```
 
 ## 成像
-使用 two focus 大斜视改进型进行成像。
+参考论文
+> W. Xu, Y. Deng, P. Huang and R. Wang, "Full-Aperture SAR Data Focusing in the Spaceborne Squinted Sliding-Spotlight Mode," in IEEE Transactions on Geoscience and Remote Sensing, vol. 52, no. 8, pp. 4596-4607, Aug. 2014, doi: 10.1109/TGRS.2013.2282863
 
 ### dramping
 
@@ -144,53 +145,54 @@ def azimuth_mosaic(self, echo_ftau_eta):
 ### foucs 
 ```python
  
-[Na,Nr] = cp.shape(echo_ftau_feta)
+def  wk_focusing(self, echo_ftau_feta, k_rot, eta_c, prf, R_ref):
+    ## RFM
 
-f_tau = cp.fft.fftshift((cp.arange(-Nr/2, Nr/2) * Fr / Nr))
-f_eta =  feta_c+cp.fft.fftshift((cp.arange(-Na/2, Na/2) * prf / Na))
-eta = eta_c + cp.arange(-Na/2, Na/2) / prf
-tau = 2 * cp.sqrt(R0**2 + vr**2 * eta_c**2) / c + cp.arange(-Nr/2, Nr/2) / Fr
+    [Na,Nr] = cp.shape(echo_ftau_feta)
 
-mat_tau, mat_eta = cp.meshgrid(tau, eta)
-mat_ftau, mat_feta = cp.meshgrid(f_tau, f_eta)
+    f_tau = ((cp.arange(-Nr/2, Nr/2) * self.Fr / Nr))
+    f_eta =  self.feta_c+((cp.arange(-Na/2, Na/2) * prf / Na))
+    eta = eta_c + cp.arange(-Na/2, Na/2) / prf
+    tau = 2 * cp.sqrt(self.R0**2 + self.vr**2 * eta_c**2) / self.c + cp.arange(-Nr/2, Nr/2) /self.Fr
 
-H3 = cp.exp((4j*cp.pi*R_ref/c)*cp.sqrt((f+mat_ftau)**2 - c**2 * mat_feta**2 / (4*vr**2)) + 1j*cp.pi*mat_ftau**2/Kr)
-if k_rot != 0:
-    H3 =H3*cp.exp(-1j*cp.pi*mat_feta**2/k_rot)
+    mat_tau, mat_eta = cp.meshgrid(tau, eta)
+    mat_ftau, mat_feta = cp.meshgrid(f_tau, f_eta)
 
-echo_ftau_feta = echo_ftau_feta * H3
+    H3 = cp.exp((4j*cp.pi*R_ref/self.c)*cp.sqrt((self.f+mat_ftau)**2 - self.c**2 * mat_feta**2 / (4*self.vr**2)) + 1j*cp.pi*mat_ftau**2/self.Kr)
+    if k_rot != 0:
+        H3 =H3*cp.exp(-1j*cp.pi*mat_feta**2/k_rot)
+    
+    echo_ftau_feta = echo_ftau_feta * H3
 
-## modified stolt mapping
-map_f_tau = cp.sqrt((f+mat_ftau)**2-c**2*mat_feta**2/(4*vr**2))-cp.sqrt(f**2-c**2*mat_feta**2/(4*vr**2))
-# map_f_tau = cp.sqrt((f+mat_ftau)**2-c**2*mat_feta**2/(4*vr**2))-f
-delta = (map_f_tau - mat_ftau)/(Fr/Nr) #频率转index
-delta_int = cp.floor(delta).astype(cp.int32)
-delta_remain = delta-delta_int
+    ## modified stolt mapping
+    map_f_tau = cp.sqrt((self.f+mat_ftau)**2-self.c**2*mat_feta**2/(4*self.vr**2))-cp.sqrt(self.f**2-self.c**2*mat_feta**2/(4*self.vr**2))
+    # map_f_tau = cp.sqrt((f+mat_ftau)**2-c**2*mat_feta**2/(4*vr**2))-f
+    delta = (map_f_tau - mat_ftau)/(self.Fr/Nr) #频率转index
+    delta_int = cp.floor(delta).astype(cp.int32)
+    delta_remain = delta-delta_int
 
-print("delta max, min", cp.max(cp.max(delta)), cp.min(cp.min(delta)))
+    ## sinc interpolation kernel length, used by stolt mapping
+    sinc_N = 8
+    echo_ftau_feta_stolt = self.stolt_interpolation(echo_ftau_feta, delta_int, delta_remain, Na, Nr, sinc_N)
+    ## focusing
+    ## modified stolt mapping, residual azimuth compress
+    # mat_R = mat_tau * self.c / 2
+    # echo_tau_feta_stolt = cp.zeros((Na, Nr), dtype=cp.complex128)
+    # eta_r_c = mat_R * cp.tan(self.theta_c) / self.vr
+    # if k_rot != 0:
+    #     H4 = cp.exp(4j*cp.pi*(mat_R-R_ref)/self.c * (cp.sqrt(self.f**2-self.c**2*mat_feta**2/(4*self.vr**2)))) * cp.exp(2j*cp.pi*mat_feta*eta_r_c - 2j*cp.pi*mat_feta*self.feta_c/k_rot)
+    #     echo_tau_feta_stolt = cp.fft.ifft((echo_ftau_feta_stolt), axis = 1)
+    #     echo_tau_feta_stolt = echo_tau_feta_stolt * H4
+    # else: 
+    #     H4 = cp.exp(4j*cp.pi*(mat_R-R_ref)/self.c * (cp.sqrt(self.f**2-self.c**2*mat_feta**2/(4*self.vr**2)))) *  cp.exp(2j*cp.pi*mat_feta*eta_r_c)
+    #     echo_tau_feta_stolt = cp.fft.ifft((echo_ftau_feta_stolt), axis = 1)
+    #     echo_tau_feta_stolt = echo_tau_feta_stolt * H4
 
-## sinc interpolation kernel length, used by stolt mapping
-sinc_N = 8
-echo_ftau_feta_stolt = stolt_interpolation(echo_ftau_feta, delta_int, delta_remain, Na, Nr, sinc_N)
+    # echo_ftau_feta_stolt = cp.fft.fft(echo_tau_feta_stolt, axis = 1)
 
-## focusing
-## modified stolt mapping, residual azimuth compress
-mat_R = mat_tau * c / 2
-echo_tau_feta_stolt = cp.zeros((Na, Nr), dtype=cp.complex128)
-eta_r_c = mat_R * cp.tan(theta_c) / vr
-if k_rot != 0:
-    H4 = cp.exp(4j*cp.pi*(mat_R-R_ref)/c * (cp.sqrt(f**2-c**2*mat_feta**2/(4*vr**2)))) * cp.exp(2j*cp.pi*mat_feta*eta_r_c - 2j*cp.pi*mat_feta*feta_c/k_rot)
-    echo_tau_feta_stolt = cp.fft.ifft((echo_ftau_feta_stolt), axis = 1)
-    echo_tau_feta_stolt = echo_tau_feta_stolt * H4
-else: 
-    H4 = cp.exp(4j*cp.pi*(mat_R-R_ref)/c * (cp.sqrt(f**2-c**2*mat_feta**2/(4*vr**2)))) *  cp.exp(2j*cp.pi*mat_feta*eta_r_c)
-    echo_tau_feta_stolt = cp.fft.ifft((echo_ftau_feta_stolt), axis = 1)
-    echo_tau_feta_stolt = echo_tau_feta_stolt * H4
-
-echo_ftau_feta_stolt = cp.fft.fft(echo_tau_feta_stolt, axis = 1)
-
-echo_stolt = (cp.fft.ifft2((echo_ftau_feta_stolt)))
-echo_no_stolt = (cp.fft.ifft2((echo_ftau_feta)))
+    echo_stolt = (cp.fft.ifft2((echo_ftau_feta_stolt)))
+    echo_no_stolt = (cp.fft.ifft2((echo_ftau_feta)))
+    return echo_stolt, echo_no_stolt
 ```
 
 ### resolve backfold
