@@ -16,7 +16,7 @@ title: sliding-spotlight mode
 </head>
 
 ## 成像几何系统
-相较于条带成像，滑动聚束模式关键在于天线波束以一个固定的角速度 $\omega$ 旋转。所以其斜视角 $\theta$ 会以一个固定速度变化。设初始斜视角为 $\theta_0$ ，斜视角满足
+相较于条带成像，滑动聚束模式关键在于天线波束的斜视角会变化。从最简单的以一个固定的角速度 $\omega$ 旋转的情况开始分析，其斜视角 $\theta$ 会以一个固定速度变化。设初始斜视角为 $\theta_0$ ，斜视角满足
 
 $$\theta = \theta_0 + \omega \eta$$
 
@@ -25,7 +25,7 @@ $\eta$ 为方位向时间，即慢时间。通过粗略的想象，我们可以�
 ### 多普勒历程
 ![alt text](/assets/radar_sys1/image_sys/slide_spot1_2.png)  
 
-如图虽然波束在旋转，但是雷达的移动与条带模式相同，所以其斜距模型是一样的。我们设 $\eta = 0$ 时， 目标与雷达的距离最短。设载波波长为 $\lambda$ ，所以目标的斜距历程为  
+如图虽然波束在旋转，但是雷达的移动与条带模式相同，所以其斜距模型是一样的。我们设 $\eta = 0$ 时， 目标与雷达的距离最短。设载波波长为 $\lambda$，载波频率为 $f_c$ ，所以目标的斜距历程为  
 
 $$R(\eta) = \sqrt{r_0^2 + v_r^2\eta^2}$$  
 
@@ -67,27 +67,31 @@ $$v_r \eta = R(\eta) sin(\theta_0 - \omega \eta - \Delta \theta)$$
 
 其中 $\Delta \theta$ 为雷达运动过程中目标 $P$ 的斜视角与波束中心斜视角的差，$\Delta \theta \in [-\theta_a/2, \theta_a/2]$。所以 $P$ 的多普勒频率为
 
-$$f(\eta,\Delta \theta) = -\frac{2v_r^2 \eta}{\lambda R(\eta)} = \frac{2 v_r sin(\theta_0 - \omega \eta - \Delta \theta)}{\lambda}$$
+$$f_a(\eta,\Delta \theta, f_r) = -\frac{2v_r^2 (f_r+f_c)\eta}{cR(\eta)}  = \frac{2 v_r (f_c+f_r) sin(\theta_0 - \omega \eta - \Delta \theta)}{c}$$
 
-所以多普勒带宽 $B_a$ 为 
-$$B_a = |f(\frac{T_a}{2},-\frac{\theta_a}{2}) - f(-\frac{Ta}{2}, \frac{\theta_a}{2})| = \frac{4v_r\cos(\theta_0)sin(\frac{\omega T_a+ \theta_A}{2})}{\lambda} \approx \frac{2v_r\cos(\theta_0)}{\lambda}\theta_a + \frac{2 v_r \omega \cos(\theta_0)}{\lambda} T_a$$
+其中 $f_r \in (-B_r/2, B_r/2)$ 表征距离向调频产生的频偏，所以多普勒带宽 $B_a$ 为 
 
-由于 $\omega T_a + \theta_a$ 较小， 用到近似 $sin(x) \approx x$ 。这里我们可以看出滑动聚束模式中，多普勒频率可以分为两部分，一个与条带模式的多普勒带宽相同，另一个与照射时间成正比。同时，注意到由于斜视角的变化，多普勒中心也会随时间变化
+$$B_a = |f(\frac{T_a}{2}, \frac{\theta_a}{2}, \frac{B_r}{2})-f(-\frac{T_a}{2}, -\frac{\theta_a}{2}, -\frac{B_r}{2})| \approx \frac{2v_r\cos(\theta_0)}{\lambda}\theta_a + \frac{2 v_r \omega \cos(\theta_0)}{\lambda} T_a + \frac{2v_r B_r \sin(\theta_0)}{c}$$
+
+由于 $\omega T_a + \theta_a$ 较小， 用到近似 $sin(x) \approx x$ 。这里我们可以看出滑动聚束模式中，多普勒频偏可以分为三部分，其中两个与条带模式的多普勒带宽相同，另一个与照射时间成正比。同时，注意到由于斜视角的变化，多普勒中心也会随时间变化
 
 $$f_{ac}(\eta) = \frac{2v_r\sin(\theta)}{\lambda} = \frac{2v_r\sin(\theta_0 - \omega \eta)}{\lambda}$$
 $$\frac{\partial f_{ac}(\eta)}{\partial \eta} = -\frac{2v_r \omega \cos(\theta_0 - \omega \eta)}{\lambda} \approx  -\frac{2v_r \omega \cos(\theta_0)}{\lambda} \approx -\frac{2v_r^2 \omega \cos^3(\theta_0)}{\lambda r_{rot}} $$
 
-可以发现多普勒中心频率的变化率近似为常数，所以不如设一个变化率 $k_rot$ ， 有
+可以发现多普勒中心频率的变化率近似为常数，所以不如设一个变化率 $k_{rot}$ ， 有
 $$k_{rot} = \frac{2v_r^2 \omega \cos^3(\theta_0)}{\lambda r_{rot}}$$
 
 此时多普勒带宽也可以写为
 
 $$B_{a} \approx B_f + |k_{rot}| T_a$$
 
-其中 $B_f$ 为条带模式下的多普勒带宽。到这一步，我们可以看出，只要通过某种方法多普勒频率中心的变化补偿掉，那么后续的步骤与条带模式的成像相同了。这一步我们不妨称之为解斜(dramping)。
+其中 $B_f$ 为条带模式下的多普勒带宽。到这一步，我们可以看出，从信号结构来讲，滑动聚束与条带模式并无本质差异。条带模式的聚焦算法理应可以用于滑动聚束模式。
 
 ## 信号处理
-滑动聚束模式的回波，在距离向上与条带模式相同，在方位向上多出中心频率变化这个不同。中心频率变化由于近似为线性，很容易去除，所以如果 $PRF$ 大于滑动聚束模式的多普勒带宽，便只是多出一个解斜的预处理操作。但是，实际成像过程中，$PRF$ 是小于滑动聚束模式的多普勒带宽，这让处理的操作变得困难。需要注意的是，虽然总的多普勒带宽，即 $B_{a} \approx B_f + |k_{rot}| T_a > PRF$ ，但固定时间，可能的多普勒带宽依旧与条带模式相同 ，即 $B_{a}(\eta) \approx  B_f < PRF$ ，所以没有引起方位向的混叠，只是存在折叠现象。 其实这个困难在聚束模式中也存在，考虑到滑动聚束模式存在虚拟旋转中心，所以可以参考聚束模式的算法。
+滑动聚束模式的回波，在距离向上与条带模式相同，在方位向上多出中心频率变化这个不同，仅影响方位向调频率。所以如果 $PRF$ 大于滑动聚束模式的多普勒带宽，传统聚焦算法依旧能够处理。但是，实际成像过程中，$PRF$ 是小于滑动聚束模式的多普勒带宽，这让处理的操作变得困难。需要注意的是，虽然全场景的多普勒带宽，即 $B_{a} \approx B_f + |k_{rot}| T_a > PRF$ ，但固定时间，可能的多普勒带宽依旧与条带模式相同 ，即 $B_{a}(\eta) \approx  B_f < PRF$ ，所以该方位向的混叠，更类似于一种折叠。 其实这个困难在聚束模式中也存在，考虑到滑动聚束模式近似存在虚拟旋转中心，所以可以参考聚束模式的算法。
 
 ### two steps focus
+既然PRF，即方位向采样率不足，那么显然升采样操作是必不可少的。那是否可以通过频域补零直接升采样呢？不行，因为对于整个成像区域，频谱是二维混叠的，即应该处于高频的信号，由于混叠，到了低频位置。所以需要先将混叠解决。two steps approach（TSA） 给出了一个巧妙的方法来解决混叠，其类似于specan算法。我们首先考虑经典的TSA算法的核心部分。
+
+
 

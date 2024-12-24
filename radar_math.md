@@ -17,7 +17,7 @@ title: sar 公式推导
 
 -----
 ## 成像算法数学推导
-
+1. [滑动聚焦相关推导](/radar_math/radar_sys/image_sys/slide_spotlight/index.html)
 
 -----
 
