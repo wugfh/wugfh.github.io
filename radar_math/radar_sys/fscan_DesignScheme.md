@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 捷变频雷达
+title: F-scan 信号模型
 ---
 
 <head>
@@ -14,4 +14,3 @@ title: 捷变频雷达
         });
     </script>
 </head>
-
