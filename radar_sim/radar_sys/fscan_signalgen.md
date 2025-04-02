@@ -96,7 +96,7 @@ $$ \phi_{min} > \arcsin[\frac{\tau \cdot c -kc/(f_c-\frac{B}{2})}{d}] + \beta$$
 
 如图，主瓣俯仰角与频率存在正相关关系。可以观察到频带分布在整个成像带中，也就是对于一个单一点目标，其处于相控阵所形成的窄波束中的时间远小于整个脉宽。因此点目标所能反射的信号带宽要小于整个信号带宽。定义点目标经过 $h(f,\phi)$ 主瓣最近的零点时，目标开始和完成扫描。
 
-$$N \cdot f (\tau - \frac{d \sin (\phi-\beta)}{c}) = k \pm 1$$
+$$N \cdot f (\tau - \frac{d \sin (\phi-\beta)}{c}) = N \cdot k \pm 1$$
 
 可以得到点目标反射信号的带宽 $B_r$ 为
 
@@ -106,8 +106,17 @@ $$ B_r(\phi) = \frac{2}{N[\tau - d \sin(\phi-\beta)/c]} < B$$
 
 $$\rho_r(\phi) = \frac{c}{2B_r} = N (\tau \cdot c - d\sin(\phi-\beta))$$
 
-可以发现，距离向分辨率与俯仰角存在负相关关系，这在条带模式，DBF-SCORE模式中是不存在的。但这也给设计人员一定便利，可以通过调整系统的 $\tau$ , $N$ , $d$ ，可以让不同俯仰角的目标分辨率不同。从而在更加关注的地方分辨率更高，不关注的地方分辨率大大降低，让整个系统更加灵活[2]。
-而点目标反射信号脉宽 $T_p(\phi)$ 为
+不合适的参数选择会存在 $\phi$ 使得 $\rho_r(\phi) \leq 0$，此时相控阵无法形成窄波束，应该避免该情况。
+
+
+<center>  
+
+![alt text](/assets/Fscan/fscan_dbf_strip_resolution.png)
+
+F-SCAN，DBF-SCORE，条带模式的距离向分辨率对比。其中DBF-SCORE模式与条带模式的距离向分辨率相同。参数: $d = 0.05 \enspace m$ , $N = 10$ , $\tau = 0.235 \enspace ns$。天线指向 $\beta = 25^{\circ}$。载波频率 $f = 30Ghz$, $T_n = 300K$, $L_n = 0.4$, 轨高 $H = 519 \enspace km$。$f_p = 1670 Hz$
+</center>
+
+可以发现，距离向分辨率与俯仰角存在负相关关系，这在条带模式，DBF-SCORE模式中是不存在的。但这也给设计人员一定便利，通过调整系统的 $\tau$ , $N$ , $d$ ，可以让不同俯仰角的目标分辨率不同。从而使得更加关注的成像区域分辨率更高，不关注的成像区域分辨率大大降低，让整个系统更加灵活[2]。同时需要关注的是，相比于DBF-SCORE，条带模式，F-SCAN模式的距离向分辨率不再由信号带宽决定，而是由天线的设计参数决定。因此在F-SCAN的设计过程中，距离向分辨率会受到距离模糊，信噪比等要求的约束。而点目标反射信号脉宽 $T_p(\phi)$ 为
 
 $$T_p([phi]) = \frac{2}{N K [\tau - d \sin(\phi-\beta)/c]}$$
 
@@ -125,19 +134,19 @@ $$G = \frac{4\pi A}{\lambda^2} sinc[\frac{d \sin(\phi-\beta)}{\lambda}]^2$$
 
 ![alt text](/assets/Fscan/fcan_dbf_strip_nesz.png)
 
-F-SCAN，DBF-SCORE，条带模式的NESZ对比。参数: $d = 0.05 \enspace m$ , $N = 10$ , $\tau = 0.235 \enspace ns$。天线指向 $\beta = 25^{\circ}$。载波频率 $f = 30Ghz$, $T_n = 300K$, $L_n = 0.4$, 轨高 $H = 519 \enspace km$。$f_p = 1670 Hz$
+F-SCAN，DBF-SCORE，条带模式的NESZ对比。参数同距离向分辨率，各个模式满足总发射功率相同，即 $P\cdot N$ 相同
 </center>
 
 天线的旁瓣会引起距离模糊。在模糊目标与主目标的斜距差 $\Delta R$ 满足
 
 $$\Delta R = \frac{m \cdot c}{2 f_p} , \enspace m \in \mathbb{Z}$$
 
-模糊目标所反射的信号会对前脉冲间隔或者后脉冲间隔的接收回波产生影响。对其的评估为 RASR。对于F-SCAN模式，RASR为
+模糊目标所反射的信号会对前脉冲间隔或者后脉冲间隔的接收回波产生影响。对其的评估为 RASR。对于F-SCAN模式，模糊目标与主目标被同时照射，此时信号频率满足使 $h(f,\phi)$ 的主瓣指向主目标。因此RASR为
 
 $$RASR = \frac{\sum_{m \in {\mathbb{Z}, m \neq 0}} h(f_0, \phi_m)^4 G^2/(R(\phi_m)^3 \sin(\eta_m))}{h(f_0, \phi_0)^4 G^2/(R(\phi_0)^3 \sin(\eta_0))}$$
 
-其中 $f_0$ 为波束扫描到主目标时，信号频率。 $\phi_0$ 为主目标俯仰角。 $\phi_m$ 为模糊目标俯仰角， $\eta_m$ 为模糊目标的斜视角。
-相较于DBF-SCORE的单发多收，条带模式单发单收，F-SCAN的多发多收特性使其RASR要好于另外两种模式。
+其中 $f_0$ 为波束指向主目标时的信号频率。 $\phi_0$ 为主目标俯仰角， $\eta_0$ 为主目标入射角。 $\phi_m$ 为模糊目标俯仰角， $\eta_m$ 为模糊目标的斜视角。
+相较于DBF-SCORE的单发多收，条带模式单发单收，F-SCAN的多发多收（MIMO）特性使其RASR要好于另外两种模式。
 
 <center>  
 
@@ -151,20 +160,68 @@ F-SCAN，DBF-SCORE，条带模式的RASR对比。参数同NESZ
 
 
 ## 载频波长影响
+由 $h(f,\phi)$ 的解析式可以看出，载波波长会显著影响 $h(f,\phi)$ 的特性，进而影响F-SCAN模式的系统性能，而不再如DBF-SCORE，条带模式一样，载波波长仅影响信号在外部环境中的传播效率。同样考虑 $h(f,\phi)$ 的位置。固定天线参数，成像区域。为使得波束连续扫描整个成像带，需要让 $k$ 在恒定，由此可以得到成像区域所需的最小信号带宽为
+
+$$ B = k/ (\tau - \frac{d \sin (\phi_{max}-\beta)}{c}) - k/ (\tau - \frac{d \sin (\phi_{min}-\beta)}{c})$$
+
+可以看出，成像区域所需的信号带宽与 $k$ 成正比，而 $k$ 与载波频率成正相关关系。因此随着载波频率的提高，照射相同的成像区域需要的带宽也就越大。其中分辨率会对天线参数进行约束，因此信号带宽可改写为
+
+$$B = \frac{k \cdot cN}{\rho_r(\phi_{max})} - \frac{k \cdot cN}{\rho_r(\phi_{min})}$$
+
+<center>  
+
+![alt text](/assets/Fscan/fscan_carrier.png)
 
 
-### 载频波长对频带利用率的影响
+F-SCAN模式下，相同成像区域与天线参数下不同载波频率所需的最小信号带宽，参数: $d = 0.05 \enspace m$ , $N = 10$ , $\tau = 0.235 \enspace ns$。天线指向 $\beta = 25^{\circ}$。成像区域为 $20^{\circ} \sim 30^{\circ}$
+</center>
+
+如图所示，在波束连续扫描这个条件下，固定分辨率，则成像区域所需带宽随着载波频率的提高，呈阶梯状上升，这大大抵消了随波段上升可用带宽增加的优势。同时随着波段的提高，可选载波频率也会减少，设计约束愈发严苛。假如设计要求仅约束了距离向分辨率的上限，而无严格要求，则信号带宽的大小可有以下优化模型得出。
+
+$$\min_{B \in \mathbb{R}} B$$
+$$ s.t. \left\{
+\begin{matrix}
+\rho_r(\phi) < \rho_{max} \\ \\
+\arcsin(\frac{\tau \cdot c -kc/(f_0-B/2)}{d}) + \beta < \phi_{min} \\ \\
+\arcsin(\frac{\tau \cdot c -kc/(f_0+B/2)}{d}) + \beta > \phi_{max} \\ \\
+0.886 \lambda / d > \phi_{max} - \phi_{min} \\ \\
+k = round(f_0 \cdot  (\tau - \frac{d \sin (\phi_{mid}-\beta)}{c}))
+\end{matrix}
+\right.
+$$
+
+该优化模型比较复杂，可以考虑先使用RASR和NESZ的要求对天线单元相位中心间距与天线通道数进行约束，减少优化变量, 然后选取最优真时延 $\tau$ 的最小信号带宽，优化结果如下
+
+<center>  
+
+![alt text](/assets/Fscan/fscan_carrier_bw.png)
 
 
-### 载波波长对接收窗的影响
+F-SCAN模式下，相同成像区域下不同载波频率所需的最小信号带宽。天线部分参数 $d = 0.05m$, $N = 10$ 。 天线指向 $\beta = 25^{\circ}$。成像区域为 $20^{\circ} \sim 30^{\circ}$, $\rho_{max} = 0.2m$
+</center>
 
-### RASR 变化
+<center>  
 
-### NESZ 变化
+![alt text](/assets/Fscan/fscan_carrier_res.png)
 
-## 参数仿真
+
+F-SCAN模式下，相同成像区域下不同载波频率使用最小信号带宽时的距离向分辨率变化。参数同上
+</center>
+
+可以看出, 简单的提高波段以获取更大的频带并不能有效改善SAR系统的分辨率. 在相同分辨率约束下,波段越高,频带利用效率越低. 虽然如此, 由于不同波段的可用带宽相差巨大, 所以提高波段依旧可以提高最小分辨率, 但没有DBF-SCORE与条带模式那么显著.
+
+### RASR 与 NESZ
+提高通道数量能有效改善RASR与NESZ,但会使可选载波频率减少.
+
+
+
+## 多波束F-SCAN SAR系统
 
 ## Ka 波段超大带宽实现与设计
+
+### 设计流程
+
+### 参数仿真
 
 
 
