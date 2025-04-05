@@ -108,11 +108,11 @@ $$ B_r(\phi) = |\frac{2}{N[\tau - d \sin(\phi-\beta)/c]} | < B$$
 
 $$\rho_r(\phi) = \frac{c}{2B_r} = |N (\tau \cdot c - d\sin(\phi-\beta))| < \rho_{max}$$
 
-其中 $\rho_{max}$ 为系统要求的分辨率约束。需要注意的是当 $\tau \cdot c - d\sin(\phi-\beta) = 0$ 时，$\rho_r(\phi) = 0$ 。这当然是不可能的，但仍然需要探求下此时发生了什么情况。设 $\phi = phi_u$ 时，发生该情况。此时 $h(f,\phi)$ 的主瓣指向不在和频率 $f$ 存在关系，任意频率均有波束指向 $\phi_d$ 。设 $\phi_d$ 对应的斜距为 $R_d$ 。则对于斜距满足如下关系的点 
+其中 $\rho_{max}$ 为系统要求的分辨率约束。需要注意的是当 $\tau \cdot c - d\sin(\phi-\beta) = 0$ 时，$\rho_r(\phi) = 0$ 。这当然是不可能的，但仍然需要探求下此时发生了什么情况。设 $\phi = \phi_u$ 时，发生该情况。此时 $h(f,\phi)$ 的主瓣指向不再和频率 $f$ 存在关系，任意频率均有波束指向 $\phi_d$ 。设 $\phi_u$ 对应的斜距为 $R_u$ 。考虑到 F-SCAN系统通过调整频率来更改波束指向，对于斜距满足如下关系的点 
 
 $$R_i = R_d \pm \frac{i\cdot c}{f_p}, \enspace i \in \mathbb{Z}, \enspace i \neq 0$$ 
 
-其将被 $\phi_d$ 严重影响，导致其距离模糊比很大，远远超出系统要求。因此在设计过程中应该避免出现 $\tau \cdot c - d\sin(\phi-\beta) = 0$ 的情况出现。又因为发射信号为带限信号，其频率下限 $f_c - B/2$ 是远大于0 的 ，因此 $k \neq 0$ 。
+其将被 $\phi_d$ 严重影响，导致其距离模糊比很大，远远高于系统要求。因此在设计过程中应该避免 $\tau \cdot c - d\sin(\phi-\beta) = 0$ 的情况出现。又因为发射信号为带限信号，其频率下限 $f_c - B/2$ 是远大于0 的 ，因此 $k \neq 0$ 。
 
 
 <center>  
