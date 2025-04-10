@@ -106,7 +106,7 @@ $$ B_r(\phi) = |\frac{2}{N[\tau - d \sin(\phi-\beta)/c]} | < B$$
 
 其中加 $|\cdot|$ 符号是源于 $\tau - \frac{d \sin (\phi-\beta)}{c}$ 可能小于0。点目标反射信号的带宽决定了SAR系统的距离向分辨率，其为
 
-$$\rho_r(\phi) = \frac{c}{2B_r} = |N (\tau \cdot c - d\sin(\phi-\beta))| < \rho_{max}$$
+$$\rho_r(\phi) = \frac{c}{2B_r} = \frac{1}{4}|N (\tau \cdot c - d\sin(\phi-\beta))| < \rho_{max}$$
 
 其中 $\rho_{max}$ 为系统要求的分辨率约束。需要注意的是当 $\tau \cdot c - d\sin(\phi-\beta) = 0$ 时，$\rho_r(\phi) = 0$ 。这当然是不可能的，但仍然需要探求下此时发生了什么情况。设 $\phi = \phi_u$ 时，发生该情况。此时 $h(f,\phi)$ 的主瓣指向不再和频率 $f$ 存在关系，任意频率均有波束指向 $\phi_d$ 。设 $\phi_u$ 对应的斜距为 $R_u$ 。考虑到 F-SCAN系统通过调整频率来更改波束指向，对于斜距满足如下关系的点 
 
@@ -171,7 +171,7 @@ F-SCAN，DBF-SCORE，条带模式的RASR对比。参数同NESZ
 ### 距离向分辨率
 由上所述，距离向分辨率与天线参数有关，相应的距离向分辨率的约束会限制天线参数的选取，反而与发射信号带宽无关。而在DBF-SCORE，条带模式中，距离向分辨率只与发射信号带宽有关。同时随着俯仰角的变化，距离向分辨率也会变化。这些约束可表诉为 
 
-$$ |N(\tau \cdot c - d\sin{\phi})| \leq \rho_{max}$$
+$$ \frac{1}{4}|N(\tau \cdot c - d\sin{\phi})| \leq \rho_{max}$$
 
 其中 $\phi$ 会随着扫描的进行发生变化，而对于F-SCAN 系统 ，波束对准 $\phi$ 时其频率是确定的，满足
 
@@ -183,17 +183,17 @@ $$\tau \cdot c - d\sin{\phi} \approx k \lambda$$
 
 带入距离向分辨率的约束中，可以得到
 
-$$N |k| \lambda \leq \rho_{max}$$
+$$\frac{1}{4} N |k| \lambda \leq \rho_{max}$$
 
 其中由于 $k \neq 0 , \enspace k \in \mathbb{Z}$ ，所以 $|k| \geq 1$ 因此有
 
-$$N \lambda \leq \rho_{max}$$
+$$\frac{1}{4} N \lambda \leq \rho_{max}$$
 
 到这步，可以得到一个推论：F-SCAN系统的分辨率约束会限制载频的选取。也可以认为载频大小决定了系统可达的最小分辨率。比如对于X波段F-SCAN雷达，最高载频为 $12 GHz$ ，其所能达到的最小分辨率为 
-$$\rho_{X} > 0.25 N \enspace m $$
+$$\rho_{X} > \frac{N}{160}  \enspace m $$
 
 受到天线波束宽度的约束，随着幅宽的增大， 天线单元的相位中心间距 $d$ 需要降低到一个合适的量级，以保证天线单元的宽波束能够覆盖整个成像区域。而为了保证距离模糊比与信噪比满足系统要求，往往需要增大通道数量，对于宽幅成像，如果 $N$ 取 30，则X波段的分辨率受到载频的约束, 需满足 $\rho_X > 0.9 m$ 。因此如果想要优化F-SCAN系统分辨率参数，要么减少天线通道数，这会使距离模糊比与信噪比恶化；要么提高载频，比如上升到Ka波段，取载频为 $35 GHz$ , 则最小分辨率为
-$$\rho_{Ka} > 0.0086 N \enspace m$$
+$$\rho_{Ka} > 0.00214 N \enspace m$$
 
 其显著优于X波段
 
@@ -224,7 +224,8 @@ $$ s.t. \left\{
 \arcsin(\frac{\tau \cdot c -kc/(f_c-B/2)}{d}) + \beta < \phi_{min} \\ \\
 \arcsin(\frac{\tau \cdot c -kc/(f_c+B/2)}{d}) + \beta > \phi_{max} \\ \\
 0.886 \lambda / d > \phi_{max} - \phi_{min} \\ \\
-k = round(f_c \cdot  (\tau - \frac{d \sin (\phi_{mid}-\beta)}{c}))
+k > (f-\frac{B}{2}) \cdot  (\tau - \frac{d \sin (\phi-\beta)}{c}) \\ \\
+k < (f+\frac{B}{2}) \cdot  (\tau - \frac{d \sin (\phi-\beta)}{c})
 \end{matrix}
 \right.
 $$
@@ -239,7 +240,7 @@ $$
 F-SCAN模式下，相同成像区域下不同载波频率所需的最小信号带宽。天线部分参数: $d = 0.03m$ , $N = 10$ 。 天线指向 $\beta = 25^{\circ}$ 。成像区域为 $20^{\circ} \sim 30^{\circ}$ , $\rho_{max} = 0.2m$
 </center>
 
-可以看出, 简单的提高波段以获取更大的频带并不能有效改善SAR系统的成像宽度. 在分辨率与成像区域的约束下,波段越高,频带利用效率越低. 虽然如此, 由于不同波段的可用带宽相差巨大, 所以提高波段依旧可以改善F-SCAN模式的成像宽度。
+可以看出, 简单的提高波段以获取更大的频带并不能有效改善SAR系统的成像宽度. 在分辨率与成像区域的约束下,波段越高,频带利用效率越低. 虽然如此, 由于不同波段的可用带宽相差巨大, 所以提高波段依旧可以改善F-SCAN模式的成像宽度。同时，由于约束距离向分辨率，天线参数一般是确定的，此时随着天线通道数的增加，信号带宽也会快速增大，但是在RASR，NESZ的约束下，$N$ 的最小值是受到限制的，因此该值应该仔细选取。
 
 
 
@@ -268,6 +269,12 @@ F-SCAN模式下，相同成像区域下最大RASR,最大NESZ 相较于通道数�
 </center>
 
 因此，在相同的成像幅度下， $N \cdot d$ 大小的上限受到限制，约束了当前波束扫描F-SCAN系统的距离模糊比与信噪比的性能上限。
+
+## Ka 波段 F-SCAN SAR系统的设计
+
+### 设计方案
+
+### 设计样例
 
 
 ## 分段扫描F-SCAN SAR系统
