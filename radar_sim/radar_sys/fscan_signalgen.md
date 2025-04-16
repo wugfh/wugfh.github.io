@@ -82,7 +82,7 @@ $$ f \cdot (\tau - \frac{d \sin (\phi-\beta)}{c}) = k, \enspace k \in \mathbb{Z}
 
 $$ \phi = \arcsin(\frac{\tau \cdot c -kc/f}{d}) + \beta$$
 
-为了在频率扫描过程中，始终为单波束连续扫描，需要使得 $k$ 在扫描过程中维持恒定。因此成像带应该保证
+同时应保证频率扫描能覆盖整个区域，假设 $k> 0$ ，则等价于
 
 $$ \phi_{max} < \arcsin[\frac{\tau \cdot c -kc/(f_c+\frac{B}{2})}{d}] + \beta$$
 $$ \phi_{min} > \arcsin[\frac{\tau \cdot c -kc/(f_c-\frac{B}{2})}{d}] + \beta$$
@@ -209,24 +209,56 @@ $$\rho_{Ka} > 0.00214 N \enspace m$$
 其显著优于X波段
 
 
-### 信号带宽
+### 信号带宽与成像宽度
 由 $h(f,\phi)$ 的解析式可以看出，载波波长会显著影响 $h(f,\phi)$ 的特性，进而影响F-SCAN模式的系统性能，而不再如DBF-SCORE，条带模式一样，载波波长仅影响信号在外部环境中的传播效率。同样考虑 $h(f,\phi)$ 的位置。固定天线参数，成像区域。为让系统始终使用单波束连续扫描整个成像带，需要让 $k$ 在恒定，由此可以得到成像区域所需的信号带宽为
 
-$$ B = k/ (\tau - \frac{d \sin (\phi_{max}-\beta)}{c}) - k/ (\tau - \frac{d \sin (\phi_{min}-\beta)}{c})$$
+$$ B = |k/ (\tau - \frac{d \sin (\phi_{max}-\beta)}{c}) - k/ (\tau - \frac{d \sin (\phi_{min}-\beta)}{c})|$$
 
-可以看出，成像区域所需的信号带宽与 $k$ 成正比，而 $k$ 的上限在分辨率与天线通道数固定时与载波频率成正相关关系。因此随着载波频率的提高，照射相同的成像区域需要的带宽也就越大。其中分辨率会对天线参数进行约束，因此信号带宽可改写为
+可以看出，成像区域所需的信号带宽与 $k$ 成正比，而 $k$ 的上限在分辨率与天线通道数固定时与载波频率存在相关关系。因此随着载波频率的提高，照射相同的成像区域需要的带宽也就越变化。其中分辨率会对天线参数进行约束，因此信号带宽可改写为
 
-$$B = \frac{k \cdot cN}{\rho_r(\phi_{max})} - \frac{k \cdot cN}{\rho_r(\phi_{min})}$$  
+$$B =| \frac{k \cdot cN}{\rho_r(\phi_{max})} - \frac{k \cdot cN}{\rho_r(\phi_{min})}|$$ 
+
+但信号带宽究竟是与载波成正比还是反比还无法确定。但我们可以反过来，探讨信号带宽固定时，成像宽度的变化。由之前分析可得，成像宽度的表达式为
+
+$$\Delta \phi =|\arcsin(\frac{\tau c - kc/(f_c+\frac{B}{2})}{d}) - \arcsin(\frac{\tau c - kc/(f_c-\frac{B}{2})}{d})|$$
+
+这里假设信号处于载频时，波束指向成像区域中心，即
+
+$$f_c \tau = k$$
+
+此时 $\tau$ 的取值主要由距离向分辨率 $\rho_r(\phi)$，天线通道数 $N$ 决定，与载频无关。同时，由于 $|d\sin(\phi)/c| << |\tau|$ ，成像区域的扫描顺序由 $\tau$ 决定。即当 $\tau < 0$ 时，低频波束指向成像区域的远端，高频波束指向近端，而 $\tau > 0$ 时则相反。因此 $\Delta \phi$ 可改写为
+
+$$\Delta \phi = -sign(\tau) \cdot [\arcsin(\frac{\tau c - kc/(f_c+\frac{B}{2})}{d}) - \arcsin(\frac{\tau c - kc/(f_c-\frac{B}{2})}{d})]$$
+
+其中 $sign(\tau)$ 满足
+
+$$ sign(\tau) = \left\{
+\begin{matrix}
+1  \geq 0 \\
+-1  < 0
+\end{matrix}
+\right.
+$$
+
+因此代入求导可得
+
+$$\Delta \phi^{\prime} = -sign(\tau) \cdot (-\frac{B\tau c}{2d(f_c+\frac{B}{2})^2\sqrt{1-[\tau c-\frac{f_c \tau c}{f_c+\frac{B}{2}}]^2/d^2}} + \frac{B\tau c}{2d(f_c-\frac{B}{2})^2\sqrt{1-[\tau c-\frac{f_c \tau c}{f_c -\frac{B}{2}}]^2/d^2}})$$
+
+可以假设 $B << f_c$ , 此时可以化简为
+
+$$\Delta \phi^{\prime} = -\frac{B^2 |\tau| c }{df^3} < 0$$
+
+因此随着载波频率的提高，$h(f,\phi)$ 在信号带宽固定时，扫描宽度会减小。因此载波频率的升高会对系统的信号带宽，成像宽度等指标产生不良影响。
 
 <center>  
 
-![alt text](/assets/Fscan/fscan_carrier.png)
+![alt text](/assets/Fscan/fscan_carrier_scan.png)
 
 
-F-SCAN模式下，相同成像区域与天线参数下不同载波频率所需的最小信号带宽，参数: $d = 0.05 \enspace m$ , $N = 10$ , $\tau = 0.235 \enspace ns$ 。 天线指向 $\beta = 25^{\circ}$ 。 成像区域为 $20^{\circ} \sim 30^{\circ}$
+F-SCAN模式下，相同成像区域与天线参数下不同载波频率所需的最小信号带宽，参数: $d = 0.03 \enspace $ m , $N = 10$ , $\tau = -0.283 \enspace $ ns 。 天线指向 $\beta = 25^{\circ}$ 。 信号带宽 $B = 1$ GHz
 </center>
 
-如图所示，在波束连续扫描这个条件下，固定分辨率，则成像区域所需带宽随着载波频率的提高，呈阶梯状上升，这大大抵消了随波段上升可用带宽增加的优势。同时随着波段的提高，可选载波频率也会减少，设计约束愈发严苛。假如设计要求仅约束了距离向分辨率的上限，则信号带宽的大小可由以下优化模型得出。
+如图所示，固定信号带宽，成像宽度随着载频的升高而下降。因此，反过来可以得到成像区域所需带宽随着载波频率的提高而提高，这大大抵消了随波段上升可用带宽增加的优势。 但在设计过程， 往往是给出视角， 以此计算出所需的信号带宽。假如设计要求仅约束了距离向分辨率的上限，则信号带宽的大小可由以下优化模型得出。
 
 $$\min_{B \in \mathbb{R}} B$$
 $$ s.t. \left\{
@@ -241,7 +273,7 @@ k < (f+\frac{B}{2}) \cdot  (\tau - \frac{d \sin (\phi-\beta)}{c})
 \right.
 $$
 
-该优化模型比较复杂，可以考虑先通过成像区域对天线相位间距进行约束，在通过RASR和NESZ的要求对天线通道数进行约束，减少优化变量, 然后通过优化真时延 $\tau$ 来获取最小信号带宽，优化结果如下
+该优化模型比较复杂，可以考虑先通过成像区域对天线相位间距进行约束，在通过RASR和NESZ的要求对天线通道数进行约束，减少优化变量, 然后通过优化时延 $\tau$ 来获取最小信号带宽，优化结果如下
 
 <center>  
 
@@ -269,18 +301,7 @@ $$|\tau| = round(\frac{4\rho_r(\phi_{mid})f_c}{Nc})/f_c \approx \frac{4\rho_r(\p
 
 
 ### RASR 与 NESZ
-由上所述，F-SCAN 模式之所以能够获取到更低的RASR与NESZ，主要源于其MIMO特性。而在MIMO中，对信噪比影响最大的便是收发的通道数 $N$ 。随着 N 的提高，理论上RASR与NESZ会显著降低。以最小化RASR为目标，优化    $\tau$ , 同时保证信号带宽 $B$ 不超过最大信号带宽 $B_{max}$ ， 距离向分辨率 $\rho_r(\phi)$ 不超过 $\rho_{max}$ , 可以得到最优RASR
-
-<center>  
-
-![alt text](/assets/Fscan/fscan_ant_rasr.png)
-![alt text](/assets/Fscan/fscan_ant_nesz.png)
-
-
-F-SCAN模式下，相同成像区域下最大RASR,最大NESZ 相较于通道数的变化。天线部分参数: $d = 0.01m$ 。 天线指向 $\beta = 25^{\circ}$ 。成像区域为 $20^{\circ} \sim 30^{\circ}$ , $\rho_{max} = 0.2m$  , 最大可用信号带宽 $B_{max} = 2GHz$
-</center>
-
-可以观察到，随着 $N$ 的增加, RASR 确实有明显的降低。其中Ka波段的RASR，NESZ相较于X波段会有所改善(why)。
+由上所述，F-SCAN 模式之所以能够获取到更低的RASR与NESZ，主要源于其MIMO特性。而在MIMO中，对信噪比和模糊比影响最大的便是收发的通道数 $N$ 。随着 N 的提高，理论上RASR与NESZ会显著降低。同时天线子孔径长度也会对距离模糊比产生较大的影响，当天线子孔径小于成像区域所需的最大子孔径长度时，天线单元的波束变宽，成像区域以外的模糊视角将会对接收信号产生影响，恶化距离模糊比。但同时天线子孔径不能过于接近成像区域所需的最大长度，不然在成像区域的最近端，最远端，天线增益会显著降低，导致距离模糊比恶化。因此天线子孔径长度需要仔细对比选取。以最小化RASR为目标，优化    $\tau$ , 同时保证信号带宽 $B$ 不超过最大信号带宽 $B_{max}$ ， 距离向分辨率 $\rho_r(\phi)$ 不超过 $\rho_{max}$ , 可以得到最优RASR
 
 <center>  
 
@@ -336,8 +357,20 @@ $$\phi_{2, min} > \phi_{max}$$
 
 $$d < \frac{\lambda}{\sin(\phi_{max}-\beta) - \sin(\phi_{min} - \beta)}$$
 
-在天线子孔径满足上述条件后，便存在时延 $\tau$ 使得该模糊情况不在存在。如果 $\tau,d$ 已经确认好，则信号带宽 $B$ 应小于 $f_c/k$ ，以使得成像区域只有一个栅瓣在扫描。
+在天线子孔径满足上述条件后，便存在时延 $\tau$ 使得该模糊情况不在存在。如果 $\tau,d$ 已经确认好，则信号带宽 $B$ 应小于 $f_c/k$ ，以使得成像区域只有一个栅瓣在扫描。F-SCAN模式相较于DBF-SCORE，条带模式，其载波频率也会对距离模糊比与信噪比产生明显的影响。究其原因，其源于随着载波频率的升高，栅瓣间的距离也会增大。由之前的分析，已经知道F-SCAN的栅瓣间距离可以由天线参数，信号带宽，载波频率得到。
 
+
+
+<center>  
+
+![alt text](/assets/Fscan/fscan_ant_rasr.png)
+![alt text](/assets/Fscan/fscan_ant_nesz.png)
+
+
+F-SCAN模式下，相同成像区域下最大RASR,最大NESZ 相较于通道数的变化。天线部分参数: $d = 0.01m$ 。 天线指向 $\beta = 25^{\circ}$ 。成像区域为 $20^{\circ} \sim 30^{\circ}$ , $\rho_{max} = 0.2m$  , 最大可用信号带宽 $B_{max} = 2GHz$
+</center>
+
+可以观察到，随着 $N$ 的增加, RASR 确实有明显的降低。其中Ka波段的RASR，NESZ相较于X波段会有所改善(why)。
 
 ## Ka 波段 F-SCAN SAR系统的设计
 
