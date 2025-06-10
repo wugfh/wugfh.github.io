@@ -33,7 +33,7 @@ $$H_j(f) = exp(-j \pi \frac{v_g}{v_s}\frac{\Delta x_j^2}{2 \lambda R_0}-j \pi \f
 子通道输出信号为 $U_j(f)$，以 $PRF$ 采样率采样得到的信号为 $U_{j,p}(f)$ 。如果想要使用传统sar的聚焦算法，需要将多孔径系统的附加系统响应补偿掉，或者说从 $[U_{1,p}(f) \cdots U_{j,p}(f) \cdots U_{N,p}(f)]$ 中重建出 $U_p(f)$，$U_p(f)$ 为 $U(f)$ 以 $N \cdot PRF$ 采样率采样得到的信号。
 由采样定理可以得到，混叠信号 $U_{j,p}$ （只考虑多普勒带宽内的信号）为
 
-$$U_{j,p}(f) = \sum_{n=0}^{N-1}{U_j(f+n \cdot PRF)}=\sum_{n=0}^{N-1}U(f+n \cdot PRF)H_{j}(f+n \cdot PRF)$$
+$$U_{j,p}(f) =\sum_{n=0}^{N-1}U_p(f+n \cdot PRF)H_{j}(f+n \cdot PRF)$$
 
 写成矩阵形式
 
@@ -132,7 +132,8 @@ $$e_{\Sigma}(f) = 2 \sum_{k=1}^{\infty}U_k(f) \cdot \sum_{m=m_0}^{N}\sum_{j=1}^{
 
 $$AASR_N = \frac{E[|e_\Sigma(f)|^2]}{p_s}$$
 
-$p_s$ 为有效信号的功率。
+$$p_s = U_0(f) \cdot \sum_{m=m_0}^{N}\sum_{j=1}^{N}H_{j0}(f) P_{jm}(f)$$
+其中 $U_0(f),H_{j0}(f)$ 为 $U_k(f),H_{jk}(f)$ 等于0时的情况，即带内信号。
 
 ### SNR Scaling 
 这里讨论方位向多孔径系统对SNR的影响。设 $\Phi_{bf}$ 表示 随系统参数的变化，SNR变化的量化因子。设子孔径的输入SNR为 $SNR_{el,j}$，经过重建算法重建后的SNR为 $SNR_{out}$。 $t_r$ 表示快时间（距离向），$t$ 表示慢时间（方位向）。同理 $f_r，f$ 分别表示距离向与方位向的频率。随着系统处理，我们逐步分析信噪比的变化。
