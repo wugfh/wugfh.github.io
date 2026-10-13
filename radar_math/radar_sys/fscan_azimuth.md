@@ -29,8 +29,8 @@ $$\Delta f \approx \alpha \Delta \theta$$
 
 其中 $\Delta f = f-f_c$ 为发射频率与载频之差。$\Delta \theta = \theta - \theta_c$ 为视角差。$\eta_1$ 时，当 $\Delta f$ 满足 $\theta_1 \in [\theta_c + \frac{\Delta f}{\alpha} - \frac{\theta_{az}}{2}, \theta_c + \frac{\Delta f}{\alpha} + \frac{\theta_{az}}{2}]$ , 目标反射的回波有效。这里假设 $\alpha > 0$  , 因此对于在 $\eta_1$ 时 P 反射的频率范围 $f_r \in [f_r^l(\eta_1),f_r^u(\eta_1)]$ 为
 
-$$f_r^l(\eta_1) = \alpha (\theta_1 - \theta_c - \frac{\theta_{az}}{2})$$
-$$f_r^u(\eta_1) = \alpha (\theta_1 - \theta_c + \frac{\theta_{az}}{2})$$
+$$f_r^l(\eta_1) = \alpha (\theta_c - \theta_1 - \frac{\theta_{az}}{2})$$
+$$f_r^u(\eta_1) = \alpha (\theta_c - \theta_1 + \frac{\theta_{az}}{2})$$
 
 设系统发射带宽为 $B_{sys} = \alpha \theta_{sc}$ ，类似于[2], $\eta_1$ 时P反射的带宽 $B_w$ 为
 
@@ -47,18 +47,18 @@ $$f_a = \frac{2V_r}{\lambda} \sin(\theta)$$
 
 代入到 $[f_r^l(\eta_1),f_r^u(\eta_1)]$ 中有
 
-$$f_r^l(f_a) = \alpha [\arcsin(\frac{\lambda f_a}{2V_r}) - \theta_c - \frac{\theta_{az}}{2}]$$
-$$f_r^u(f_a) = \alpha [\arcsin(\frac{\lambda f_a}{2V_r}) - \theta_c + \frac{\theta_{az}}{2}]$$
+$$f_r^l(f_a) = \alpha [-\arcsin(\frac{\lambda f_a}{2V_r}) + \theta_c - \frac{\theta_{az}}{2}]$$
+$$f_r^u(f_a) = \alpha [-\arcsin(\frac{\lambda f_a}{2V_r}) + \theta_c + \frac{\theta_{az}}{2}]$$
 
 对于某个脉冲间隔，其接收回波的多普勒频率 $f_a \in [f_a^l(f_r), f_a^u(f_r)]$ 与发射频率 $f_r$ 相关，为讨论方便，假设发射信号为线性调频信号，则有
 
-$$f_a^l(f_r) = \frac{2 V_r}{\lambda} \sin(\theta_c + \frac{f_r}{\alpha} - \frac{\theta_{az}}{2})$$
+$$f_a^l(f_r) = \frac{2 V_r}{\lambda} \sin(\theta_c - \frac{f_r}{\alpha} - \frac{\theta_{az}}{2})$$
 
-$$f_a^l(f_r) = \frac{2 V_r}{\lambda} \sin(\theta_c + \frac{f_r}{\alpha} + \frac{\theta_{az}}{2})$$
+$$f_a^l(f_r) = \frac{2 V_r}{\lambda} \sin(\theta_c - \frac{f_r}{\alpha} + \frac{\theta_{az}}{2})$$
 
 $$B_{fov}(f_r) = \frac{2 V_r}{\lambda} [\sin(\theta_c + \frac{f_r}{\alpha} + \frac{\theta_{az}}{2}) - \sin(\theta_c + \frac{f_r}{\alpha} - \frac{\theta_{az}}{2})]$$
 
-上述中 $f_a \in [f_a^l(f_r), f_a^u(f_r)]$ 与 $f_r \in [f_r^l(\eta_1),f_r^u(\eta_1)]$ 是相互的，分别从不同角度表诉了频率扫描模式中多普勒频率与脉冲频率的相互约束关系，仿真中实现其一即可。 其中 $B_{fov}(f_r)$ 为发射频率为 $f_r$ 时， 接收回波的多普勒带宽。为了避免方位模糊，PRF 应该大于 $B_{fov}(f_r)$。而在此脉冲间隔中，回波的多普勒带宽 $B_d$ 为
+上述中 $f_a \in [f_a^l(f_r), f_a^u(f_r)]$ 与 $f_r \in [f_r^l(\eta_1),f_r^u(\eta_1)]$ 是相互的，分别从不同角度表诉了频率扫描模式中多普勒频率与脉冲频率的相互约束关系，仿真中实现其一即可。 其中 $B_{fov}(f_r)$ 为发射频率为 $f_r$ 时， 接收回波的多普勒带宽。为了避免方位模糊，PRF 应该大于 $B_{fov}(f_r)$。而在整个成像过程中，点目标的多普勒带宽 $B_d$ 为
 
 $$B_d =  \frac{2 V_r}{\lambda} [\sin(\theta_c + \frac{\theta_{sc}}{2}) - \sin(\theta_c - \frac{\theta_{sc}}{2})]$$
 
