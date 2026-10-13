@@ -31,9 +31,9 @@ $$\delta_{az} \approx \frac{Vs}{B_{az}}$$
 相对于单孔径雷达的收发一体，多孔径雷达的TX/RX是分开的，信号的发射路径于接收路径不一定相同（接收天线与发射天线不一定相同，甚至不一定为同一个卫星）。  
 对于给定的一个接收天线 $i$ ，其与发射天线的距离为 $\Delta x_i$。则方位向的接收信号为
 
-$$h_i(t) = exp[-j \frac{2 \pi}{\lambda}(R(t)+R_i(t))]$$
+$$h_i(t) = s(t)\cdot exp[-j \frac{2 \pi}{\lambda}(R(t)+R_i(t))]$$
 
-显然，与单孔径接收信号对比，多孔径的接收信号不再是简单的 $2 R(t)$ ，需要对发送与接收分别考虑。其中，如果 $\Delta x_i$ 足够小，接收路径可表示为 
+其中是 $s(t)$ 为发射信号。显然，与单孔径接收信号对比，多孔径的接收信号不再是简单的 $2 R(t)$ ，需要对发送与接收分别考虑。其中，如果 $\Delta x_i$ 足够小，接收路径可表示为 
 
 $$R_i(t) = R(t-\frac{\Delta x_i}{v_s})$$
 
@@ -41,7 +41,7 @@ $$R_i(t) = R(t-\frac{\Delta x_i}{v_s})$$
 
 $$R(t) \approx R_0 + \frac{v_g v_s}{2 R_0} t^2$$
 
-代入到接收信号中，可以化简得到
+代入到接收信号中，假设发射信号为线性调频信号，可以化简得到
 
 $$h_i(t) \approx exp(-j \frac{4 \pi}{\lambda}R_0) \cdot exp(-j \frac{v_g}{v_s}\frac{\pi \Delta x_i^2}{2 \lambda R_0}) \cdot exp[-j \frac{2\pi v_g v_s}{\lambda}\frac{(t-\frac{\Delta x_i}{2 v_s})^2}{R_0}]$$
 

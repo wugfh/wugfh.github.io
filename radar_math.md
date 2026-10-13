@@ -11,7 +11,8 @@ title: sar 公式推导
 2. [模糊分析](/radar_math/radar_sys/radar_sys1/ambiguous_analyse/index.html)
 3. [混叠信号重构滤波器](/radar_math/radar_sys/radar_sys1/reconstruct_filter/index.html)
 4. [方位向多孔径分析1](/radar_math/multi_channel/m_chan1/index.html)
-4. [方位向多孔径分析2](/radar_math/multi_channel/m_chan2/index.html)
+5. [方位向多孔径分析2](/radar_math/multi_channel/m_chan2/index.html)
+6. [F-scan 信号模型](/radar_math/radar_sys/fscan_SignalModel/index.html)
 
 -----
 
